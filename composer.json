@@ -1,5 +1,5 @@
 {
-    "name": "mariuszkraj/gitlab-junit-reporter",
+    "name": "mariusz-kraj/gitlab-reporter",
     "description": "Simple package for reporting bugs results to the Gitlab.com merge request in form of the comments",
     "type": "library",
     "require": {
