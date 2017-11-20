@@ -1,0 +1,25 @@
+{
+    "name": "mariuszkraj/gitlab-junit-reporter",
+    "description": "Simple package for reporting bugs results to the Gitlab.com merge request in form of the comments",
+    "type": "library",
+    "require": {
+        "php": "~7.1",
+        "symfony/console": "^3.3",
+        "symfony/yaml": "^3.3",
+        "guzzlehttp/guzzle": "^6.3",
+        "jean85/pretty-package-versions": "^1.0.2"
+    },
+    "bin": [
+        "bin/gitlab-reporter"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mariusz Kraj",
+            "email": "mariusz.kraj@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"GitlabReporter\\": ["src/"]}
+    }
+}

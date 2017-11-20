@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+use GitlabReporter\Command\ReportCommand;
+
+gc_disable(); // performance boost
+
+$autoloaderInWorkingDirectory = getcwd() . '/vendor/autoload.php';
+
+if (is_file($autoloaderInWorkingDirectory)) {
+    require_once $autoloaderInWorkingDirectory;
+}
+
+if (!class_exists('GitlabJunitReporter\Command\ReportCommand', true)) {
+    $composerAutoloadFile = __DIR__ . '/../vendor/autoload.php';
+    if (!is_file($composerAutoloadFile)) {
+        $composerAutoloadFile = __DIR__ . '/../../../autoload.php';
+    }
+    require_once $composerAutoloadFile;
+}
+
+$version = 'Version unknown';
+
+try {
+    $version = \Jean85\PrettyVersions::getVersion('mariuszkraj/gitlab-reporter')->getPrettyVersion();
+} catch (\OutOfBoundsException $e) {
+}
+
+$application = new \Symfony\Component\Console\Application(
+    'GitLab Junit Reported',
+    $version
+);
+$application->setCatchExceptions(false);
+$application->add(new ReportCommand());
+$application->run();
