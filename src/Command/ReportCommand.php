@@ -74,7 +74,7 @@ class ReportCommand extends Command
             $gitlab = new GuzzleClient($accessToken);
 
             $mergeRequest = $gitlab->getMergeRequestFromBranch(
-                getenv('CI_PROJECT_NAME'),
+                getenv('CI_PROJECT_PATH'),
                 getenv('CI_COMMIT_REF_NAME')
             );
 
@@ -87,7 +87,7 @@ class ReportCommand extends Command
                 $note = $reporter->read($reporterConfig['path']);
 
                 $gitlab->postCommentToMergeRequest(
-                    getenv('CI_PROJECT_NAME'),
+                    getenv('CI_PROJECT_PATH'),
                     $mergeRequest['iid'],
                     $note
                 );

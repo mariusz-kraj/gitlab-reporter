@@ -4,7 +4,7 @@
 
 1. Install from composer
 ```
-composer require --dev mariusz-kraj/gitlab-reporter
+composer require --dev "mariusz-kraj/gitlab-reporter:*"
 ```
 
 2. Add config file "gitlab-ci-reporter.yml" in the root of your project:
@@ -23,7 +23,7 @@ reporters:
 
 ```yaml
 after_script:
-    - bin/gitlab-reporter publish
+  - bin/gitlab-reporter publish
 ```
 
 4. Generate access code and add [secret variable](https://docs.gitlab.com/ee/ci/variables/#secret-variables)

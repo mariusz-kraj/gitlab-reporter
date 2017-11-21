@@ -26,9 +26,7 @@ class PhpCodeSnifferReader extends GenericReader
         foreach ($report['file'] as $checkstyleIssue) {
             $issueFilePath = $checkstyleIssue['@attributes']['name'];
 
-
-            $cwd = '/opt/workbuzz/';
-            $relativeIssueFilePath = str_replace($cwd, '', $issueFilePath);
+            $relativeIssueFilePath = str_replace(getcwd(), '', $issueFilePath);
 
             $issueFileName = explode('/', $issueFilePath);
             $issueFileName = end($issueFileName);

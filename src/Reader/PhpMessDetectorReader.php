@@ -26,9 +26,7 @@ class PhpMessDetectorReader extends GenericReader
         foreach ($report['file'] as $fileMess) {
             $issueFilePath = $fileMess['@attributes']['name'];
 
-
-            $cwd = '/builds/codibly-coders/workbuzz-backend/';
-            $relativeIssueFilePath = str_replace($cwd, '', $issueFilePath);
+            $relativeIssueFilePath = str_replace(getcwd(), '', $issueFilePath);
 
             $issueFileName = explode('/', $issueFilePath);
             $issueFileName = end($issueFileName);
