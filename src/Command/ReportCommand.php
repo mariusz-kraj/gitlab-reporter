@@ -79,20 +79,29 @@ class ReportCommand extends Command
             );
 
             foreach ($config['reporters'] as $reporterAlias => $reporterConfig) {
-                $output->writeln(sprintf('<info>Processing reporter: %s</info>', $reporterAlias));
+                try {
+                    $output->writeln(sprintf('<info>Processing reporter: %s</info>', $reporterAlias));
 
-                /** @var ReaderInterface $reporter */
-                $reporter = new $this->reporters[$reporterAlias]();
+                    /** @var ReaderInterface $reporter */
+                    $reporter = new $this->reporters[$reporterAlias]();
 
-                $note = $reporter->read($reporterConfig['path']);
+                    $note = $reporter->read($reporterConfig['path']);
 
-                $gitlab->postCommentToMergeRequest(
-                    getenv('CI_PROJECT_PATH'),
-                    $mergeRequest['iid'],
-                    $note
-                );
+                    $gitlab->postCommentToMergeRequest(
+                        getenv('CI_PROJECT_PATH'),
+                        $mergeRequest['iid'],
+                        $note
+                    );
 
-                $output->writeln(sprintf('<info>Comment published</info>'));
+                    $output->writeln(sprintf('<info>Comment published</info>'));
+                } catch (\RuntimeException $e) {
+                    if (true === $reporterConfig['failIfNotFound']) {
+                        $output->writeln('<error>'.$e->getMessage().'</error>');
+                        return 2;
+                    }
+
+                    $output->writeln('<info>File not found, skipping</info>');
+                }
             }
 
             $output->writeln(sprintf('<info>Finished</info>'));

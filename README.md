@@ -13,10 +13,13 @@ composer require --dev "mariusz-kraj/gitlab-reporter:*"
 reporters:
     phpunit:
         path: 'tests/_output/report.xml'
+        failIfNotFound: true
     phpcs:
         path: 'build/phpmd.xml'
+        failIfNotFound: true
     phpmd:
         path: 'build/phpcs.xml'
+        failIfNotFound: true
 ```
 
 3. Add 'after_' to your "gitlab-ci.yml":
