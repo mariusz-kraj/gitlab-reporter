@@ -15,10 +15,10 @@ reporters:
         path: 'tests/_output/report.xml'
         failIfNotFound: true
     phpcs:
-        path: 'build/phpmd.xml'
+        path: 'build/phpcs.xml'
         failIfNotFound: true
     phpmd:
-        path: 'build/phpcs.xml'
+        path: 'build/phpmd.xml'
         failIfNotFound: true
 ```
 
