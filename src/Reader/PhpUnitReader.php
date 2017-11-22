@@ -6,6 +6,9 @@ use GitlabReporter\Reader\Markdown\TextTable;
 
 class PhpUnitReader extends GenericReader
 {
+    const EMOJI_OK = ':white_check_mark:';
+    const EMOJI_FAILURE = ':x:';
+
     const STATUS_FAILURE = 'Failure';
     const STATUS_ERROR = 'Error';
 
