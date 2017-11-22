@@ -6,8 +6,8 @@ use GitlabReporter\Reader\Markdown\TextTable;
 
 class PhpUnitReader extends GenericReader
 {
-    const EMOJI_OK = ':white_check_mark:';
-    const EMOJI_FAILURE = ':x:';
+    const STATUS_FAILURE = 'Failure';
+    const STATUS_ERROR = 'Error';
 
     protected function getHeader(): string
     {
@@ -62,14 +62,14 @@ class PhpUnitReader extends GenericReader
 
     private function getTestSuitesDetails(array $jsonReport): string
     {
-        $reportTableHeader = ['Test Suite', 'Name', 'Class', 'File'];
+        $reportTableHeader = ['Test Suite', 'Name', 'Class', 'File', 'Status'];
         $reportTableRows = [];
 
         foreach ($jsonReport['testsuite'] as $testSuite) {
             $testSuiteName = $testSuite['@attributes']['name'];
 
             foreach ($testSuite['testcase'] as $testCase) {
-                if (!isset($testCase['failure'])) {
+                if (!isset($testCase['failure']) && !isset($testCase['error'])) {
                     continue;
                 }
 
@@ -77,14 +77,15 @@ class PhpUnitReader extends GenericReader
                     $testSuiteName,
                     $testCase['@attributes']['name'],
                     $testCase['@attributes']['class'],
-                    $testCase['@attributes']['file']
+                    $testCase['@attributes']['file'],
+                    isset($testCase['failure']) ? self::STATUS_FAILURE : self::STATUS_ERROR
                 ];
             }
         }
 
         $markdownTable = new TextTable($reportTableHeader, $reportTableRows);
 
-        $header = "# Failed Tests\n\n";
+        $header = "# Failures or Errors \n\n";
         return $header.$markdownTable->render();
     }
 
