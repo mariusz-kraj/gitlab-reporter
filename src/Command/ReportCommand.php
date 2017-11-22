@@ -33,7 +33,7 @@ class ReportCommand extends Command
                 'config-file',
                 InputArgument::OPTIONAL,
                 'Path to the result file',
-                'gitlab-ci-reporter.yml'
+                '.gitlab-ci-reporter.yml'
             );
     }
 
@@ -106,6 +106,7 @@ class ReportCommand extends Command
             $output->writeln(sprintf("<error>Unable to finish request: %s</error>", $e->getMessage()));
 
             return 2;
+
         }
     }
 

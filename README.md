@@ -7,7 +7,7 @@
 composer require --dev "mariusz-kraj/gitlab-reporter:*"
 ```
 
-2. Add config file "gitlab-ci-reporter.yml" in the root of your project:
+2. Add config file ".gitlab-ci-reporter.yml" in the root of your project:
 
 ```yaml
 reporters:
