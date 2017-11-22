@@ -38,21 +38,24 @@ class PhpCodeSnifferReader extends GenericReader
                 $relativeIssueFilePath
             );
 
-            if (isset($checkstyleIssue['error']['@attributes'])) {
-                $checkstyleIssue['error'] = [
-                    $checkstyleIssue['error'],
-                ];
-            }
 
-            foreach ($checkstyleIssue['error'] as $error) {
-                $fileReport .= sprintf(
-                    "*  %s [Line %s](%s#L%s) (%s)\n",
-                    $error['@attributes']['message'],
-                    $error['@attributes']['line'],
-                    $relativeIssueFilePath,
-                    $error['@attributes']['line'],
-                    $error['@attributes']['source']
-                );
+            if (isset($checkstyleIssue['error'])) {
+                if (isset($checkstyleIssue['error']['@attributes'])) {
+                    $checkstyleIssue['error'] = [
+                        $checkstyleIssue['error'],
+                    ];
+                }
+
+                foreach ($checkstyleIssue['error'] as $error) {
+                    $fileReport .= sprintf(
+                        "*  %s [Line %s](%s#L%s) (%s)\n",
+                        $error['@attributes']['message'],
+                        $error['@attributes']['line'],
+                        $relativeIssueFilePath,
+                        $error['@attributes']['line'],
+                        $error['@attributes']['source']
+                    );
+                }
             }
 
             $fileReport .= "\n\n";

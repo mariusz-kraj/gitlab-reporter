@@ -83,7 +83,7 @@ class ReportCommand extends Command
                     $output->writeln(sprintf('<info>Processing reporter: %s</info>', $reporterAlias));
 
                     /** @var ReaderInterface $reporter */
-                    $reporter = new $this->reporters[$reporterAlias]();
+                    $reporter = new $this->reporters[$reporterAlias]($output);
 
                     $note = $reporter->read($reporterConfig['path']);
 
