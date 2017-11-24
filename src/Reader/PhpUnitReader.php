@@ -50,7 +50,7 @@ class PhpUnitReader extends GenericReader
                 $testSuite['@attributes']['assertions'],
                 $errors,
                 $failures,
-                $testSuite['@attributes']['skipped'],
+                isset($testSuite['@attributes']['skipped']) ? $testSuite['@attributes']['skipped'] : 'N/A',
                 $testSuite['@attributes']['time'],
                 $this->getStatus($errors, $failures)
             ];
