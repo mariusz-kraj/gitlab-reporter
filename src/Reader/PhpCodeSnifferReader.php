@@ -23,6 +23,12 @@ class PhpCodeSnifferReader extends GenericReader
     {
         $checkstyleReport = '';
 
+        if (!isset($report['file'])) {
+            $checkstyleReport .= "\n ### No issues found!";
+
+            return $checkstyleReport;
+        }
+
         foreach ($report['file'] as $checkstyleIssue) {
             $issueFilePath = $checkstyleIssue['@attributes']['name'];
 
