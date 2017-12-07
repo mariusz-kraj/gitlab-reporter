@@ -3,15 +3,20 @@
 namespace GitlabReporter\Command;
 
 use GitlabReporter\Client\GuzzleClient;
+use GitlabReporter\Config\GitlabReporterConfiguration;
 use GitlabReporter\Reader\PhpCodeSnifferReader;
 use GitlabReporter\Reader\PhpMessDetectorReader;
 use GitlabReporter\Reader\PhpUnitReader;
 use GitlabReporter\Reader\ReaderInterface;
 use GuzzleHttp\Exception\ClientException;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -68,15 +73,27 @@ class ReportCommand extends Command
 
             $output->writeln(sprintf('<info>Config file: %s</info>', $configFile));
 
-            // Let's assume that config is great, validation in next stage
-            $config = Yaml::parse(file_get_contents($configFile));
+
+            try {// Let's assume that config is great, validation in next stage
+                $config = Yaml::parse(file_get_contents($configFile));
+
+                $this->processConfig($config);
+            } catch (InvalidConfigurationException $e) {
+                $output->writeln(sprintf('<error>Error during configuration parsing: %s</error>', $e->getMessage()));
+                return 1;
+            }
 
             $gitlab = new GuzzleClient($accessToken);
 
-            $mergeRequest = $gitlab->getMergeRequestFromBranch(
-                getenv('CI_PROJECT_PATH'),
-                getenv('CI_COMMIT_REF_NAME')
-            );
+            try {
+                $mergeRequest = $gitlab->getMergeRequestFromBranch(
+                    getenv('CI_PROJECT_PATH'),
+                    getenv('CI_COMMIT_REF_NAME')
+                );
+            } catch (\RuntimeException $e) {
+                $output->writeln(sprintf('<info>Merge Request not found</info>'));
+                return 0;
+            }
 
             foreach ($config['reporters'] as $reporterAlias => $reporterConfig) {
                 try {
@@ -117,6 +134,15 @@ class ReportCommand extends Command
             return 2;
 
         }
+    }
+
+    private function processConfig(array $config)
+    {
+        $processor = new Processor();
+        $processor->processConfiguration(
+            new GitlabReporterConfiguration(),
+            $config
+        );
     }
 
 }

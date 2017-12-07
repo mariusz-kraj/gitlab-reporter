@@ -51,6 +51,8 @@ class GuzzleClient implements GitlabInterface
                 return $mergeRequest;
             }
         }
+
+        throw new \RuntimeException('Merge request not found');
     }
 
     public function postCommentToMergeRequest(string $project, int $mergeRequestIid, string $body)
