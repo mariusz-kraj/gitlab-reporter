@@ -78,10 +78,15 @@ class ReportCommand extends Command
 
             $gitlab = new GuzzleClient($accessToken);
 
-            $mergeRequest = $gitlab->getMergeRequestFromBranch(
-                getenv('CI_PROJECT_PATH'),
-                getenv('CI_COMMIT_REF_NAME')
-            );
+            try {
+                $mergeRequest = $gitlab->getMergeRequestFromBranch(
+                    getenv('CI_PROJECT_PATH'),
+                    getenv('CI_COMMIT_REF_NAME')
+                );
+            } catch (\RuntimeException $e) {
+                $output->writeln(sprintf('<error>Merge request for % branch, not found</error>', getenv('CI_COMMIT_REF_NAME')));
+                return 0;
+            }
 
             foreach ($config['reporters'] as $reporterAlias => $reporterConfig) {
                 try {
