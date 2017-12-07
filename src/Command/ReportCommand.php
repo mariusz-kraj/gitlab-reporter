@@ -73,27 +73,15 @@ class ReportCommand extends Command
 
             $output->writeln(sprintf('<info>Config file: %s</info>', $configFile));
 
-
-            try {// Let's assume that config is great, validation in next stage
-                $config = Yaml::parse(file_get_contents($configFile));
-
-                $this->processConfig($config);
-            } catch (InvalidConfigurationException $e) {
-                $output->writeln(sprintf('<error>Error during configuration parsing: %s</error>', $e->getMessage()));
-                return 1;
-            }
+            // Let's assume that config is great, validation in next stage
+            $config = Yaml::parse(file_get_contents($configFile));
 
             $gitlab = new GuzzleClient($accessToken);
 
-            try {
-                $mergeRequest = $gitlab->getMergeRequestFromBranch(
-                    getenv('CI_PROJECT_PATH'),
-                    getenv('CI_COMMIT_REF_NAME')
-                );
-            } catch (\RuntimeException $e) {
-                $output->writeln(sprintf('<info>Merge Request not found</info>'));
-                return 0;
-            }
+            $mergeRequest = $gitlab->getMergeRequestFromBranch(
+                getenv('CI_PROJECT_PATH'),
+                getenv('CI_COMMIT_REF_NAME')
+            );
 
             foreach ($config['reporters'] as $reporterAlias => $reporterConfig) {
                 try {
@@ -134,15 +122,6 @@ class ReportCommand extends Command
             return 2;
 
         }
-    }
-
-    private function processConfig(array $config)
-    {
-        $processor = new Processor();
-        $processor->processConfiguration(
-            new GitlabReporterConfiguration(),
-            $config
-        );
     }
 
 }
