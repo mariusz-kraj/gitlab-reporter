@@ -1,0 +1,4 @@
+reporters:
+    - type: 'phpunit'
+      path: 'tests/_output/report.xml'
+
