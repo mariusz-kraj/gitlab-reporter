@@ -2,9 +2,6 @@
 
 namespace GitlabReporter\Reader;
 
-use GitlabReporter\Reader\Markdown\TextTable;
-use Symfony\Component\Console\Output\OutputInterface;
-
 class PhpMessDetectorReader extends GenericReader
 {
     protected function getHeader(): string
@@ -56,6 +53,10 @@ class PhpMessDetectorReader extends GenericReader
             $checkstyleReport .= $fileReport;
         }
 
+        if (false === isset($report['error'])) {
+            return $checkstyleReport;
+        }
+
         $checkstyleReport .= "## Errors\n\n";
         foreach ($report['error'] as $fileMess) {
             $issueFilePath = $fileMess['@attributes']['filename'];
@@ -83,7 +84,6 @@ class PhpMessDetectorReader extends GenericReader
 
             $checkstyleReport .= $fileReport;
         }
-
 
         return $checkstyleReport;
     }
